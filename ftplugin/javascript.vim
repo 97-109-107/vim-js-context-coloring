@@ -9,16 +9,19 @@
 let s:jscc = expand('<sfile>:p:h').'/../bin/jscc-cli'
 
 if !exists('g:js_context_colors')
-	"using colors suggested by Douglas Crockford
-        "1) white: 15
-        "2) green: 2
-        "3) yellow: 3
-        "4) blue: 4
-        "5) red: 1
-        "6) cyan: 6
-        "7) grey: 7
-	let g:js_context_colors = [ 15, 2, 3, 4, 1, 6, 7 ]
-
+  if !has("gui_running") 
+    "using colors suggested by Douglas Crockford
+          "1) white: 15 
+          "2) green: 2
+          "3) yellow: 3
+          "4) blue: 4
+          "5) red: 1
+          "6) cyan: 6
+          "7) grey: 7
+    let g:js_context_colors = [ 15, 2, 3, 4, 1, 6, 7 ]
+  else
+    let g:js_context_colors = ['#ffffff', '#00ff00', '#ffff00', '#0000ff', '#ff0000', '#00ffff', '#333333']
+  endif
 endif
 
 if !exists('g:js_context_colors_enabled')
@@ -51,7 +54,11 @@ let s:my_changedtick = b:changedtick
 function! JSCC_DefineHighlightGroups()
 	let c = 0
 	for colr in g:js_context_colors
-		exe 'highlight JSCC_Level_' . c . '  ctermfg=' . colr . ' ctermbg=NONE cterm=NONE'
+    if !has("gui_running") 
+      exe 'highlight JSCC_Level_' . c . '  ctermfg=' . colr . ' ctermbg=NONE cterm=NONE'
+    else
+      exe 'highlight JSCC_Level_' . c . '  guifg=' . colr . ' guibg=NONE gui=NONE'
+    endif
 		let c += 1
 	endfor
 
